@@ -1,0 +1,129 @@
+<html>
+<head>
+	<title>Donations</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		.expandable {
+			background-color: #eee;
+			color: #444;
+			cursor: pointer;
+			padding: 18px;
+			width: 100%;
+			border: none;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+		}
+
+		.expandable:hover {
+			background-color: #ccc;
+		}
+
+		button:focus svg {
+			outline: 2px solid;
+		}
+
+		button svg {
+			height: 1em;
+			margin-left: 0.5em;
+		}
+
+		[aria-expanded="true"] .vert {
+			display: none;
+		}
+
+		[aria-expanded] rect {
+			fill: currentColor;
+		}
+
+		.content {
+			padding: 0 18px;
+			background-color: white;
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.2s ease-out;
+		}
+	</style>
+</head>
+
+<body>
+	<p>Thanks for your collaboration! You can support my projects by following methods:</p>
+	<a href="https://paypal.me/davicm" aria-label="Via paypal"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg" border="0" role="presentation"></a>
+
+	<a href="https://ko-fi.com/davidacm">Via ko-fi platform</a>
+	<div class="expandable">
+		<button>Using cryptocurrencies</button>
+		<div>
+			<p>Select the cryptocurrency of your preference and copy the address</p>
+			<div id="cryptos"></div>
+		</div>
+	</div>
+	<p><a href="https://docs.google.com/forms/d/123gSqayOAsIQLx1NiI98fEqr46oiJRZ9nNq0_KIF9WU">
+			Send me your comments or suggestions in this link
+		</a></p>
+</body>
+<script>
+
+	function addCrypto(name, address) {
+		let div = document.getElementById('cryptos').appendChild(document.createElement('div'));
+		div.className = "expandable";
+		div.innerHTML = `<button>${name}</button>
+		<div>
+			<p>To make your contribution, send ${name} to the following address: ${address}</p>
+			<button class="btncopy">
+				copy address
+			</button>
+		</div>`;
+		div.querySelector('.btncopy').onclick = function () {
+			navigator.clipboard.writeText(address);
+		}
+	}
+
+	function setExpandables() {
+		const exps = document.querySelectorAll('.expandable');
+		exps.forEach(el => {
+			const control = el.querySelector('button');
+			const content = el.querySelector('div');
+			if (!(control && content)) {
+				console.log("error, unable to get required elements", control, content);
+				return;
+			}
+			control.setAttribute('aria-expanded', false);
+			control.innerHTML = `${control.textContent}
+			<svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+				<rect class="vert" height="8" width="2" y="1" x="4"/>
+				<rect height="2" width="8" y="4" x="1"/>
+			</svg>`;
+			content.className = 'content';
+			content.hidden = true;
+			let curState = false;
+			control.onclick = function () {
+				curState = !curState;
+				control.setAttribute('aria-expanded', curState);
+				if (curState) {
+					content.hidden = false;
+					content.style.maxHeight = content.scrollHeight + "px";
+				}
+				else {
+					content.style.maxHeight = null;
+					setTimeout(function () {
+						content.hidden = true;
+					}, 200);
+				}
+			}
+		});
+	}
+
+	addCrypto("Bitcoin (btc)", "3H8Qp9xnhuqKEVMUpjXUXxS8aoHEmyeV1B");
+	addCrypto("Ethereum (ETH)", "0xD59656feDE81289988D6331ccB3523Fbb25502Ef");
+	addCrypto("Bitcoin Cash (BCH)", "18euQx3nU76vJr1xxNm9dMVYPRL1MrL4PB");
+	addCrypto("USD Coin (USDC)", "0x97278d2FD31BCb7D86da734f8c255455AcE58dBb");
+	addCrypto("Dogecoin (DOGE)", "DRSsCwd8men9JW2xHvuMCzpFV6Fy1hRJrY");
+	addCrypto("Litecoin (LTC)", "MQPSXV4Wc3k3uUpLYb9UA4chiCwsu49f14");
+	addCrypto("DAI", "0xd85C4d631DCac949665bEa2439CECC02A55C6A3B");
+
+
+	setExpandables();
+</script>
+
+</html>

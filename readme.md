@@ -1,0 +1,1 @@
+# This repo contains the ways to send me donations for my projects.
